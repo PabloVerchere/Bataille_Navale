@@ -1,6 +1,7 @@
 from random import randint # border included
 
 from . import Boat
+from . import Coordinates
 
 class Game():
     def __init__(self):
@@ -14,11 +15,11 @@ class Game():
     def initTabBoat(self): # Self not needed...
         TabBoat = []
 
-        TabBoat.append(Boat.Boat("porte-avions", 5))
-        TabBoat.append(Boat.Boat("croiseur", 4))
-        TabBoat.append(Boat.Boat("contre-torpilleur", 3))
-        TabBoat.append(Boat.Boat("sous-marin", 3))
-        TabBoat.append(Boat.Boat("torpilleur", 2))
+        TabBoat.append(Boat.Boat("Porte-avions", 5))
+        TabBoat.append(Boat.Boat("Croiseur", 4))
+        TabBoat.append(Boat.Boat("Contre-torpilleur", 3))
+        TabBoat.append(Boat.Boat("Sous-marin", 3))
+        TabBoat.append(Boat.Boat("Torpilleur", 2))
 
         return TabBoat
 
@@ -28,7 +29,7 @@ class Game():
         # Xlab
         print(" " * 3, end = "")
         for i in range(10):
-            print(i, " ", end = "")
+            print(i + 1, " ", end = "")
         print()
 
         # Grid + Ylab
@@ -42,23 +43,56 @@ class Game():
                         print("\033[33m", end = "")
                         print(self.gridHide[i][j], " ", end = "")
                         print("\033[0m", end = "")
+
+                    # If missed print in blue
+                    elif self.gridHide[i][j] == 2:
+                        print("\033[34m", end = "")
+                        print(self.gridHide[i][j], " ", end = "")
+                        print("\033[0m", end = "")
+
+                    # If touched print in green
+                    elif self.gridHide[i][j] == 3:
+                        print("\033[32m", end = "")
+                        print(self.gridHide[i][j], " ", end = "")
+                        print("\033[0m", end = "")
+
+                    # If sunk print in red
+                    elif self.gridHide[i][j] == 4:
+                        print("\033[31m", end = "")
+                        print(self.gridHide[i][j], " ", end = "")
+                        print("\033[0m", end = "")
                     else:
                         print(self.gridHide[i][j], " ", end = "")
                 else:
-                    # If there is a boat, print in yellow
-                    if self.gridPlay[i][j] == 1:
-                        print("\033[33m", end = "")
-                        print(self.gridPlay[i][j], " ", end = "")
-                        print("\033[0m", end = "")
-                    else:
-                        print(self.gridPlay[i][j], " ", end = "")
+                    print(self.gridPlay[i][j], " ", end = "")
+                    
+
             print()
     
 
+    def intro(self):
+        print("""
+######################################################################
+#############      Bienvenue dans ma Bataille Navale      ############
+######################################################################
+                """)
+        print("Vous jouez contre l'ordinateur : il a placé ses bateaux aléatoirement.")
+        
+        print("Il dispose d’:")
+        for boat in self.TabBoat:
+            print(" -", boat.name, "(", boat.size, "cases)")
+
+        print("""
+Règles :
+- Les bateaux ne peuvent être disposés qu’horizontalement ou verticalement, mais jamais en diagonale.
+- Deux bateaux ne peuvent ni se chevaucher, ni être collés l’un à l'autre.
+              
+Prêt ? C'est parti, bonne chance !
+              """)
 
 
     # Check if the boat is in the grid
-    def is_in_grid(self, boat : Boat):
+    def boat_in_grid(self, boat : Boat):
         inGrid = True
 
         if boat.dir: # Vertical
@@ -101,7 +135,7 @@ class Game():
             boat.coord.x = randint(0, 9)
             boat.coord.y = randint(0, 9)
             
-            while(not self.is_in_grid(boat) or self.is_occuped(boat)): # While the boat can't be placed, we try another position
+            while(not self.boat_in_grid(boat) or self.is_occuped(boat)): # While the boat can't be placed, we try another position
                 boat.dir = randint(0, 1)
 
                 boat.coord.x = randint(0, 9)
@@ -123,23 +157,106 @@ class Game():
 
 
     # Check if a boat is sunk
-    def checkBoat(self, boat : Boat):
+    def checkBoat(self, boat : Boat): # NOT WORKING
         if boat.state == 0: # If the boat is not sunk
+            allTouched = True
+
             if boat.dir: # Vertical
                 for i in range(boat.size):
-                    if self.gridHide[boat.coord.x + i][boat.coord.y] != 3: # If all the boat's cases are touched, the boat is sunk
-                        boat.state = 1
+                    if self.gridHide[boat.coord.x + i][boat.coord.y] == 1: # If one of the boat's cases is not touched, the boat is not sunk
+                        allTouched = False
                         break
-                # Update the grid
-                for i in range(boat.size):
-                    self.gridHide[boat.coord.x + i][boat.coord.y] = 4
+
+                # Update the grid if sunk
+                if allTouched:
+                    boat.state = 1 # Sunk
+                    for i in range(boat.size):
+                        self.gridHide[boat.coord.x + i][boat.coord.y] = 4
                         
 
             else: # Horizontal
                 for i in range(boat.size):
-                    if self.gridHide[boat.coord.x][boat.coord.y + i] != 3: # If all the boat's cases are touched, the boat is sunk
-                        boat.state = 1
+                    if self.gridHide[boat.coord.x][boat.coord.y + i] == 1: # If one of the boat's cases is not touched, the boat is not sunk
+                        allTouched = False
                         break
-                # Update the grid
-                for i in range(boat.size):
-                    self.gridHide[boat.coord.x][boat.coord.y + i] = 4
+
+                # Update the grid if sunk
+                if allTouched:
+                    boat.state = 1 # Sunk
+                    for i in range(boat.size):
+                        self.gridHide[boat.coord.x][boat.coord.y + i] = 4
+
+
+    # Check all the boats
+    def checkAllBoat(self):
+        for boat in self.TabBoat:
+            self.checkBoat(boat)
+
+
+    # Update the grid
+    def updateGrid(self, coord : Coordinates):
+        if self.gridHide[coord.x][coord.y] == 1: # If there is a boat, we hit it
+            self.gridHide[coord.x][coord.y] = 3
+        else:
+            self.gridHide[coord.x][coord.y] = 2 # If there is no boat, we miss it
+
+
+    # Check if the coord is in the grid
+    def co_in_grid(self, coord : Coordinates):
+        inGrid = True
+
+        if (coord.x < 0 or coord.x > 9) or (coord.y < 0 or coord.y > 9):
+            inGrid = False
+
+        return inGrid
+
+
+    # Check if the case is already touched
+    def already_touched(self, coord : Coordinates):
+        not_valid = [2, 3, 4]
+
+        touched = False
+
+        if self.gridHide[coord.x][coord.y] in not_valid:
+            touched = True
+
+        return touched
+
+
+    # NEED TO VERIF THE COORD in the grid and if the case is already not touched
+    # Make the player play
+    def play(self):
+        # Ask the player to enter a coord
+        coord = input("Coordonnées (ex: A1) : ")
+        coord = coord.upper() # Upper case
+        coord = coord.strip() # Remove spaces
+
+        # Split the string into alphabetic and numeric parts
+        coord = ["".join(filter(str.isalpha, coord)), "".join(filter(str.isdigit, coord))]
+ 
+        # Convert the coord
+        co = Coordinates.Coordinates(ord(coord[0]) - 65, int(coord[1]) - 1)
+
+        # Check if the coord is valid
+        while self.already_touched(co) or not self.co_in_grid(co):
+            coord = input("Coordonnées (ex: A1) : ")
+            coord = coord.upper()
+            coord = coord.strip()
+
+            coord = ["".join(filter(str.isalpha, coord)), "".join(filter(str.isdigit, coord))]
+            co = Coordinates.Coordinates(ord(coord[0]) - 65, int(coord[1]) - 1)
+
+
+        print(co.x, co.y)
+        # Update the grid
+        self.updateGrid(co)
+        # Check if a boat is sunk
+        self.checkAllBoat()
+
+
+    def V1(self):
+        self.intro()
+
+        while(True):
+            self.showGrid(True)
+            self.play()
