@@ -3,6 +3,7 @@ from random import randint # border included
 from . import Boat
 from . import Coordinates
 from . import Data
+from .fct import *
 
 
 class Game():
@@ -29,24 +30,16 @@ class Game():
                 if debug:
                     if Coordinates.Coordinates(i, j).in_list(self.TabCoord): 
                         if self.grid[i][j] == Data.Init: # If there is a undiscovered boat, print in Magenta
-                            print("\033[35m", end = "")
-                            print("B", " ", end = "")
-                            print("\033[0m", end = "")
+                            print_color("B  ", Data.colorMagenta, False)
                         
                         elif self.grid[i][j] == Data.Touch: # If touched print in green
-                            print("\033[32m", end = "")
-                            print(self.grid[i][j], " ", end = "")
-                            print("\033[0m", end = "")
+                            print_color(self.grid[i][j] + "  ", Data.colorGreen, False)
 
                         elif self.grid[i][j] == Data.Sunk: # If sunk print in red
-                            print("\033[31m", end = "")
-                            print(self.grid[i][j], " ", end = "")
-                            print("\033[0m", end = "")
+                            print_color(self.grid[i][j] + "  ", Data.colorRed, False)
 
                     elif self.grid[i][j] == Data.Miss: # If missed print in blue
-                        print("\033[34m", end = "")
-                        print(self.grid[i][j], " ", end = "")
-                        print("\033[0m", end = "")
+                        print_color(self.grid[i][j] + "  ", Data.colorBlue, False)
 
                     else:
                         print(self.grid[i][j], " ", end = "")
@@ -55,21 +48,16 @@ class Game():
                 else:
                     # If missed print in blue
                     if self.grid[i][j] == Data.Miss:
-                        print("\033[34m", end = "")
-                        print(self.grid[i][j], " ", end = "")
-                        print("\033[0m", end = "")
+                        print_color(self.grid[i][j] + "  ", Data.colorBlue, False)
 
                     # If touched print in green
                     elif self.grid[i][j] == Data.Touch:
-                        print("\033[32m", end = "")
-                        print(self.grid[i][j], " ", end = "")
-                        print("\033[0m", end = "")
+                        print_color(self.grid[i][j] + "  ", Data.colorGreen, False)
 
                     # If sunk print in red
                     elif self.grid[i][j] == Data.Sunk:
-                        print("\033[31m", end = "")
-                        print(self.grid[i][j], " ", end = "")
-                        print("\033[0m", end = "")
+                        print_color(self.grid[i][j] + "  ", Data.colorRed, False)
+
                     else:
                         print(self.grid[i][j], " ", end = "")
                     
@@ -160,7 +148,7 @@ Prêt ? C'est parti, bonne chance !
                 i += 1
 
                 if i > 1000: # If we try too many times, we stop
-                    print("ERROR: Can't place the boat")
+                    print_color("ERREUR : Impossible de placer le bateau", Data.colorRed)
                     break
             
             # Add the boat's tile to the list
@@ -232,13 +220,13 @@ Prêt ? C'est parti, bonne chance !
     # Print the result of the shoot
     def printShoot(self, co : Coordinates):
         if(self.grid[co.x][co.y] == Data.Miss): # If we miss
-            print(" - A l'eau - ")
+            print_color(" - A l'eau - ", Data.colorBlue)
         
         elif(self.grid[co.x][co.y] == Data.Touch): # If we touch a boat
-            print(" - Touché - ")
+            print_color(" - Touché - ", Data.colorGreen)
 
         elif(self.grid[co.x][co.y] == Data.Sunk): # If we sunk a boat
-            print(" - Coulé - ")
+            print_color(" - Coulé - ", Data.colorRed)
 
         print()
 
@@ -296,7 +284,7 @@ Prêt ? C'est parti, bonne chance !
         self.intro()
 
         while(not self.allSunk()):
-            self.showGrid(False)
+            self.showGrid(True)
             self.play()
             nb += 1
 
