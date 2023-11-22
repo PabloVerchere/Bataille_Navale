@@ -2,26 +2,18 @@ from random import randint # border included
 
 from . import Boat
 from . import Coordinates
+from . import Data
 
 class Game():
     def __init__(self):
-        self.gridHide = [[0] * 10 for i in range(10)] # Secret grid with boats placement
-        self.gridPlay = [["."] * 10 for i in range(10)] # Grid to show to the player
+        self.gridHide = [[Data.HNothing] * 10 for i in range(10)] # Secret grid with boats placement
+        self.gridPlay = [[Data.PInit] * 10 for i in range(10)] # Grid to show to the player
 
-        self.TabBoat = self.initTabBoat() # List of the boats
+        self.TabBoat = initTabBoat() # List of the boats
         self.placeBoatBot(self.TabBoat) # Place the boats randomly
 
 
-    def initTabBoat(self): # Self not needed...
-        TabBoat = []
 
-        TabBoat.append(Boat.Boat("Porte-avions", 5))
-        TabBoat.append(Boat.Boat("Croiseur", 4))
-        TabBoat.append(Boat.Boat("Contre-torpilleur", 3))
-        TabBoat.append(Boat.Boat("Sous-marin", 3))
-        TabBoat.append(Boat.Boat("Torpilleur", 2))
-
-        return TabBoat
 
 
     # Show the grid to the player
@@ -260,3 +252,15 @@ Prêt ? C'est parti, bonne chance !
         while(True):
             self.showGrid(True)
             self.play()
+
+
+
+
+
+def initTabBoat(): # To move in fct.py
+    TabBoat = []
+
+    for name, size in Data.Boats.items():
+        TabBoat.append(Boat.Boat(name, size))
+
+    return TabBoat

@@ -22,7 +22,6 @@ class Boat:
         else:
             print("OK")
             
-            
         print("Size:", self.size)
         
         print("Direction: ", end = "")
