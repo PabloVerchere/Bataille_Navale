@@ -9,7 +9,7 @@ class Boat:
         self.size = size
         self.dir = 0 # 0 is Horizontal, 1 is Vertical
 
-        self.coord = Coordinates.Coordinates() # Left Up Corner
+        self.coord = Coordinates.Coordinates(-1, -1) # Left Up Corner
         
 
     # DEBUG, show the boat's attributes
@@ -18,7 +18,7 @@ class Boat:
         
         print("State: ", end = "")
         if self.state:
-            print("sunk")
+            print("Sunk")
         else:
             print("OK")
             

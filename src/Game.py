@@ -6,18 +6,15 @@ from . import Data
 
 class Game():
     def __init__(self):
-        self.gridHide = [[Data.HNothing] * 10 for i in range(10)] # Secret grid with boats placement
+        self.gridHide = [[Data.HNothing] * 10 for i in range(10)] # Secret grid with boats placement, MAY NOT BE NECESSARY
         self.gridPlay = [[Data.PInit] * 10 for i in range(10)] # Grid to show to the player
 
         self.TabBoat = initTabBoat() # List of the boats
         self.placeBoatBot(self.TabBoat) # Place the boats randomly
 
 
-
-
-
     # Show the grid to the player
-    def showGrid(self, showHide = False):
+    def showGrid(self, debug = False): # NEED TO DO A FCT FOR THE COLORS
         # Xlab
         print(" " * 3, end = "")
         for i in range(10):
@@ -29,45 +26,63 @@ class Game():
             print(chr(65 + i), " ", end = "") # A to J
             
             for j in range(10):
-                if showHide:
+                if debug:
                     # If there is a boat print in yellow
-                    if self.gridHide[i][j] == 1:
+                    if self.gridHide[i][j] == Data.HBoat:
                         print("\033[33m", end = "")
                         print(self.gridHide[i][j], " ", end = "")
                         print("\033[0m", end = "")
 
                     # If missed print in blue
-                    elif self.gridHide[i][j] == 2:
+                    elif self.gridHide[i][j] == Data.HWater:
                         print("\033[34m", end = "")
                         print(self.gridHide[i][j], " ", end = "")
                         print("\033[0m", end = "")
 
                     # If touched print in green
-                    elif self.gridHide[i][j] == 3:
+                    elif self.gridHide[i][j] == Data.HTouch:
                         print("\033[32m", end = "")
                         print(self.gridHide[i][j], " ", end = "")
                         print("\033[0m", end = "")
 
                     # If sunk print in red
-                    elif self.gridHide[i][j] == 4:
+                    elif self.gridHide[i][j] == Data.HSunk:
                         print("\033[31m", end = "")
                         print(self.gridHide[i][j], " ", end = "")
                         print("\033[0m", end = "")
                     else:
                         print(self.gridHide[i][j], " ", end = "")
-                else:
-                    print(self.gridPlay[i][j], " ", end = "")
-                    
 
+                else:
+                    # If missed print in blue
+                    if self.gridPlay[i][j] == Data.PMiss:
+                        print("\033[34m", end = "")
+                        print(self.gridPlay[i][j], " ", end = "")
+                        print("\033[0m", end = "")
+
+                    # If touched print in green
+                    elif self.gridPlay[i][j] == Data.PTouch:
+                        print("\033[32m", end = "")
+                        print(self.gridPlay[i][j], " ", end = "")
+                        print("\033[0m", end = "")
+
+                    # If sunk print in red
+                    elif self.gridPlay[i][j] == Data.PSunk:
+                        print("\033[31m", end = "")
+                        print(self.gridPlay[i][j], " ", end = "")
+                        print("\033[0m", end = "")
+                    else:
+                        print(self.gridPlay[i][j], " ", end = "")
+                    
             print()
     
 
     def intro(self):
         print("""
-######################################################################
-#############      Bienvenue dans ma Bataille Navale      ############
-######################################################################
-                """)
+#######################################################################
+################## Bienvenue dans ma Bataille Navale ##################
+#######################################################################
+        """)
         print("Vous jouez contre l'ordinateur : il a placé ses bateaux aléatoirement.")
         
         print("Il dispose d’:")
@@ -81,6 +96,14 @@ Règles :
               
 Prêt ? C'est parti, bonne chance !
               """)
+
+
+    def outro(self, n : int):
+        print("""
+#######################################################################
+################# Bravo, vous avez gagné, en""", n, """coups #################
+#######################################################################
+        """)
 
 
     # Check if the boat is in the grid
@@ -98,9 +121,10 @@ Prêt ? C'est parti, bonne chance !
         return inGrid
 
 
-    # Bool return of if we can place the boat
-    def is_occuped(self, boat : Boat):
+    # Bool return of if we can place the boat or not
+    def is_occuped(self, boat : Boat): # TO DO WITHOUT THE GRID
         occ = False
+        occupedTile = occupedTile() # add all the tile yet use by other boat and then compare it to the boat wished placement 
         
         if boat.dir: # Vertical
             for i in range(boat.size):
@@ -116,9 +140,25 @@ Prêt ? C'est parti, bonne chance !
 
         return occ
 
+    # Return a list of all the tile used by all the boat placed
+    def occupedTile(self):
+        Tile = [] # May be a game attribut
+
+        for boat in self.TabBoat:
+            if boat.coord.x > 0: # if the boat is placed
+                if boat.dir: # V
+                    for i in boat.size:
+                        Tile.append(boat.coord + Coordinates(i, 0))
+
+                else:
+                    for i in boat.size:
+                        Tile.append(boat.coord + Coordinates(0, i))
+
+        return Tile
+
 
     # Place the boats automatically the boats
-    def placeBoatBot(self, TabBoat : list):
+    def placeBoatBot(self, TabBoat : list): # BUG, NEED TO CHECK IT, or simply verify if there is 17 number 1
         i = 0
         # Select boat in descending order of size
         for boat in TabBoat:
@@ -177,6 +217,7 @@ Prêt ? C'est parti, bonne chance !
                     boat.state = 1 # Sunk
                     for i in range(boat.size):
                         self.gridHide[boat.coord.x][boat.coord.y + i] = 4
+                        self.gridPlay[boat.coord.x][boat.coord.y + i] = Data.PSunk
 
 
     # Check all the boats
@@ -189,8 +230,11 @@ Prêt ? C'est parti, bonne chance !
     def updateGrid(self, coord : Coordinates):
         if self.gridHide[coord.x][coord.y] == 1: # If there is a boat, we hit it
             self.gridHide[coord.x][coord.y] = 3
+            self.gridPlay[coord.x][coord.y] = Data.PTouch
+
         else:
             self.gridHide[coord.x][coord.y] = 2 # If there is no boat, we miss it
+            self.gridPlay[coord.x][coord.y] = Data.PMiss
 
 
     # Check if the coord is in the grid
@@ -215,11 +259,29 @@ Prêt ? C'est parti, bonne chance !
         return touched
 
 
-    # NEED TO VERIF THE COORD in the grid and if the case is already not touched
+    # Print the result of the shoot
+    def printShoot(self, co : Coordinates):
+        if(self.gridHide[co.x][co.y] == Data.HWater): # If we miss
+            print(" - A l'eau - ")
+        
+        elif(self.gridHide[co.x][co.y] == Data.HTouch): # If we touch a boat 
+            print(" - Touché - ")
+
+        elif(self.gridHide[co.x][co.y] == Data.HSunk): # If we sunk a boat
+            print(" - Coulé - ")
+
+        print()
+
+
+
+
+
+
+
     # Make the player play
     def play(self):
         # Ask the player to enter a coord
-        coord = input("Coordonnées (ex: A1) : ")
+        coord = input("\nCoordonnées (ex: A1) : ")
         coord = coord.upper() # Upper case
         coord = coord.strip() # Remove spaces
 
@@ -238,20 +300,36 @@ Prêt ? C'est parti, bonne chance !
             coord = ["".join(filter(str.isalpha, coord)), "".join(filter(str.isdigit, coord))]
             co = Coordinates.Coordinates(ord(coord[0]) - 65, int(coord[1]) - 1)
 
-
-        print(co.x, co.y)
-        # Update the grid
+        # Update the grids
         self.updateGrid(co)
         # Check if a boat is sunk
         self.checkAllBoat()
+        # Print the shoot
+        self.printShoot(co)
 
 
+    # Check if all the boats are sunk
+    def allSunk(self):
+        all = True
+
+        for boat in self.TabBoat:
+            if boat.state == 0: # If at least one of the boat is not sunk
+                all = False
+                break
+        
+        return all
+
+    # V1 version of the game, ie: player against a random boat grid
     def V1(self):
+        nb = 0
         self.intro()
 
-        while(True):
-            self.showGrid(True)
+        while(not self.allSunk()):
+            self.showGrid()
             self.play()
+            nb += 1
+
+        self.outro(nb)
 
 
 

@@ -19,3 +19,5 @@ Boats = {
     "Sous-marin":3,
     "Torpilleur":2
 }
+
+# WE WILL ONLY USE 1 GRID, visible and boat placement will be stored in there attributs, need to do a debut fct to display them with game.showGrid()
