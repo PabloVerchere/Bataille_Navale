@@ -9,10 +9,25 @@ class Boat:
         self.size = size
         self.dir = 0 # 0 is Horizontal, 1 is Vertical
 
-        self.coord = Coordinates.Coordinates(-1, -1) # Left Up Corner
-        
+        self.coord = Coordinates.Coordinates() # Left Up Corner
 
-    # DEBUG, show the boat's attributes
+
+    # Return if the boat will not have any tile in common with the list
+    def placeable(self, list : list):
+        if self.dir: # Vertical
+            for i in range(self.size):
+                if Coordinates.Coordinates(self.coord.x + i, self.coord.y).in_list(list):
+                    return False
+                
+        else: # Horizontal
+            for i in range(self.size):
+                if Coordinates.Coordinates(self.coord.x, self.coord.y + i).in_list(list):
+                    return False
+                
+        return True
+
+
+    # DEBUG, show the boat's attributs
     def print(self):
         print(self.name)
         

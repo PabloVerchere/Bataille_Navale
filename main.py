@@ -9,17 +9,10 @@ bateaux placés par l’ordinateur dans la grille secrète.
 # A faire... 
 
 
-
 game = Game()
-
 game.V1()
 
-"""
-a faire
-saisir les tirs, afficher les tirs effectue
-+ resultat du dernier
-avertir le joueur quand il gange
-"""
+
 
 """
 Indication : os.system("clear") permet d’effacer l’écran.

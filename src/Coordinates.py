@@ -4,4 +4,17 @@ class Coordinates:
         self.y = y
 
 
-    # need to surcharge + operator
+    # + operator overload
+    def __add__(self, other):
+        return Coordinates(self.x + other.x, self.y + other.y)
+    
+    # overload for coord in coord list
+    def in_list(self, list):
+        for co in list:
+            if co.x == self.x and co.y == self.y:
+                return True
+        return False
+    
+    # DEBUG, show the coord's attributs
+    def print(self):
+        print(self.x, self.y)
