@@ -274,7 +274,7 @@ Prêt ? C'est parti, bonne chance !
             self.play()
             nb += 1
 
-        self.outro(nb)
+        outro(nb)
 
 
 
