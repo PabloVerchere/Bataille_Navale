@@ -85,17 +85,6 @@ Prêt ? C'est parti, bonne chance !
               """)
 
 
-    def outro(self, n : int):
-        print("""
-#######################################################################
-################# Bravo, vous avez gagné, en""", n, """coups #################
-#######################################################################
-        """)
-        if n <= 17:
-            print("###########################   Tricheur !!   ###########################")
-            print("#######################################################################")
-
-
     # Check if the boat is in the grid
     def boat_in_grid(self, boat : Boat):
         inGrid = True
@@ -120,10 +109,6 @@ Prêt ? C'est parti, bonne chance !
         else: # Horizontal
             for i in range(boat.size):
                 Tile.append(Coordinates.Coordinates(boat.coord.x, boat.coord.y + i))
-
-
-
-    
 
 
     # Place the boats automatically
@@ -278,6 +263,7 @@ Prêt ? C'est parti, bonne chance !
         
         return all
 
+
     # V1 version of the game, ie: player against a random boat grid
     def V1(self):
         nb = 0
@@ -294,10 +280,3 @@ Prêt ? C'est parti, bonne chance !
 
 
 
-def initTabBoat(): # To move in fct.py
-    TabBoat = []
-
-    for name, size in Data.Boats.items():
-        TabBoat.append(Boat.Boat(name, size))
-
-    return TabBoat

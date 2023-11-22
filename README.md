@@ -2,4 +2,5 @@
 
 
 # TO DO
-initTabBoat in fct.py
+...
+init + outro
