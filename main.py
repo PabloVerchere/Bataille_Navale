@@ -13,37 +13,7 @@ bateaux placés par l’ordinateur dans la grille secrète.
 game = Game()
 
 
-
 game.V1()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-* a l eau  
-+ touche  
-X coule
-. rien   
-"""
 
 """
 a faire
