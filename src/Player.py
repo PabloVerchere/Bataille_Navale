@@ -6,7 +6,7 @@ from . import Data
 from .fct import *
 
 
-class Game():
+class Player():
     def __init__(self):
         self.grid = [[Data.Init] * 10 for i in range(10)] # Grid to show to the player
 
@@ -265,12 +265,12 @@ Prêt ? C'est parti, bonne chance !
 
 
     # V1 version of the game, ie: player against a random boat grid
-    def V1(self):
+    def V1(self, debug = False):
         nb = 0
         self.intro()
 
         while(not self.allSunk()):
-            self.showGrid(True)
+            self.showGrid(debug)
             self.play()
             nb += 1
 

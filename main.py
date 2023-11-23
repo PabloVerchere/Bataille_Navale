@@ -1,4 +1,4 @@
-from src.Game import Game
+from src.Player import Player
 
 
 """ V1
@@ -9,7 +9,7 @@ bateaux placés par l’ordinateur dans la grille secrète.
 # A faire... 
 
 
-game = Game()
+game = Player()
 game.V1()
 
 
