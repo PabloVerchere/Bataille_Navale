@@ -7,15 +7,22 @@ from .fct import *
 
 
 class Player():
-    def __init__(self):
+    def __init__(self, human = True):
         self.grid = [[Data.Init] * 10 for i in range(10)] # Grid to show to the player
 
         self.TabBoat = initTabBoat() # List of the boats
-        self.TabCoord = self.placeBoatBot(self.TabBoat) # Place the boats randomly and return the list of the occuped tiles
+
+        if human:
+            self.TabCoord = self.placeBoatHuman(self.TabBoat) # Ask the player to place the boats and return the list of the occuped tiles
+        else:
+            self.TabCoord = self.placeBoatBot(self.TabBoat) # Place the boats randomly and return the list of the occuped tiles
 
 
     # Show the grid to the player
-    def showGrid(self, debug = False):
+    def showGrid(self, debug = False, CoordList = None): # If TabBoat is empty, use a List of Coordinates pass in parameter
+        if CoordList == None:
+            CoordList = self.TabCoord
+
         # Xlab
         print(" " * 3, end = "")
         for i in range(10):
@@ -28,7 +35,7 @@ class Player():
             
             for j in range(10):
                 if debug:
-                    if Coordinates.Coordinates(i, j).in_list(self.TabCoord): 
+                    if Coordinates.Coordinates(i, j).in_list(CoordList): 
                         if self.grid[i][j] == Data.Init: # If there is a undiscovered boat, print in Magenta
                             print_color("B  ", Data.colorMagenta, False)
                         
@@ -64,7 +71,7 @@ class Player():
             print()
     
 
-    def intro(self):
+    def introV1(self):
         print("""
 #######################################################################
 ################## Bienvenue dans ma Bataille Navale ##################
@@ -136,6 +143,36 @@ Prêt ? C'est parti, bonne chance !
                     print_color("ERREUR : Impossible de placer le bateau", Data.colorRed)
                     break
             
+            # Add the boat's tile to the list
+            self.occupedTile(occupedTile, boat)
+
+        return occupedTile
+    
+
+    # Place the boats manually
+    def placeBoatHuman(self, TabBoat : list):
+        occupedTile = []
+
+        for boat in TabBoat:
+            self.showGrid(True, occupedTile)
+
+            print("Placez votre", boat.name, "(", boat.size, "cases)")
+
+            print("Direction (0-H / 1-V) :", end="")
+            boat.dir = int(input())
+
+            boat.coord = self.askCoord()
+            print()
+
+            # While the boat can't be placed, we ask another position
+            while((not self.boat_in_grid(boat)) or not boat.placeable(occupedTile)):
+                print("Direction (0-H / 1-V) :", end="")
+                boat.dir = int(input())
+
+                boat.coord = self.askCoord()
+                print()
+
+
             # Add the boat's tile to the list
             self.occupedTile(occupedTile, boat)
 
@@ -218,7 +255,7 @@ Prêt ? C'est parti, bonne chance !
 
     def askCoord(self):
         # Ask the player to enter a coord
-        coord = input("\nCoordonnées (ex: A1) : ")
+        coord = input("Coordonnées (ex: A1) : ")
         coord = coord.upper() # Upper case
         coord = coord.strip() # Remove spaces
 
@@ -240,8 +277,8 @@ Prêt ? C'est parti, bonne chance !
         return co
 
 
-    # Make the player play
-    def play(self):
+    # Make the human play in V1
+    def playV1(self):
         co = self.askCoord()
 
         # Update the grids
@@ -274,7 +311,7 @@ Prêt ? C'est parti, bonne chance !
             self.play()
             nb += 1
 
-        outro(nb)
+        outroV1(nb)
 
 
 

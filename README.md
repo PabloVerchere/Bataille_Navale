@@ -2,5 +2,4 @@
 
 
 # TO DO
-...
-init + outro
+verif values in Game init

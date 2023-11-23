@@ -14,7 +14,7 @@ def clearScreen():
     print(Data.clear, end = "")
 
 
-# Init the tab of boats with the data from Data.py
+# Init the tab of boats with the Boats from Data.py
 def initTabBoat():
     TabBoat = []
 
@@ -24,8 +24,8 @@ def initTabBoat():
     return TabBoat
 
 
-# Message to stop the game and show number of turns
-def outro(n : int):
+# Message to stop the game and show number of turns in V1
+def outroV1(n : int):
         print("""
 #######################################################################
 ################# Bravo, vous avez gagné, en""", n, """coups #################
