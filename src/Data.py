@@ -16,6 +16,8 @@ Boats = {
 # Colors
 colorDefault = "\033[39m"
 colorReset = "\033[0m"
+# Clear the screen
+clear = "\033c"
 
 colorRed = "\033[31m"
 colorGreen = "\033[32m"

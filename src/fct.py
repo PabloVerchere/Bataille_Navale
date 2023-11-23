@@ -9,6 +9,11 @@ def print_color(text : str, color : str, end = True):
         print(str(color) + str(color) + str(text) + Data.colorReset, end = "")
 
 
+# Clear the screen
+def clearScreen():
+    print(Data.clear, end = "")
+
+
 # Init the tab of boats with the data from Data.py
 def initTabBoat():
     TabBoat = []
