@@ -131,7 +131,7 @@ Prêt ? C'est parti, bonne chance !
             boat.coord.y = randint(0, 9)
             
             # While the boat can't be placed, we try another position
-            while((not self.boat_in_grid(boat)) or not boat.placeable(occupedTile)):
+            while((not self.boat_in_grid(boat)) or not boat.placeable(occupedTile)): # We verify if all the boat's tile are in the grid and if all the tile are not occuped
                 boat.dir = randint(0, 1)
 
                 boat.coord.x = randint(0, 9)
