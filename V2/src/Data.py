@@ -3,20 +3,20 @@ Init = "."
 Miss = "*"
 Touch = "+"
 Sunk = "X"
+Debug = "B  "
 
 # Boat
 Boats = {
+    "Porte-avions":5,
+    "Croiseur":4,
+    "Contre-torpilleur":3,
     "Sous-marin":3,
     "Torpilleur":2
 }
-
-"""
-"Porte-avions":5,
-"Croiseur":4,
-"Contre-torpilleur":3,
-
 """
 
+
+"""
 # Colors
 colorDefault = "\033[39m"
 colorReset = "\033[0m"

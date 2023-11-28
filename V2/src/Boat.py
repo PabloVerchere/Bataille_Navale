@@ -27,6 +27,14 @@ class Boat:
         return True
 
 
+    def copy(self, other):
+        self.name = other.name
+        self.state = other.state
+        self.size = other.size
+        self.dir = other.dir
+        self.coord = other.coord.copy()
+
+
     # DEBUG, show the boat's attributs
     def print(self):
         print(self.name)

@@ -10,10 +10,4 @@ bateaux placés par l’ordinateur dans la grille secrète.
 
 
 game = Game()
-game.play(1)
-
-
-
-"""
-Indication : os.system("clear") permet d’effacer l’écran.
-"""
+game.playSmart(1)

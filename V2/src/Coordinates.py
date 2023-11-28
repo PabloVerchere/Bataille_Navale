@@ -19,6 +19,25 @@ class Coordinates:
                 return True
         return False
     
+
+    def copy(self):
+        return Coordinates(self.x, self.y)
+    
     # DEBUG, show the coord's attributs
     def print(self):
         print(self.x, self.y)
+
+
+    def direction(self, other):
+        # Up
+        if self.x - 1 == other.x and self.y == other.y:
+            return 0
+        # Right
+        elif self.x == other.x and self.y + 1 == other.y:
+            return 1
+        # Down
+        elif self.x + 1 == other.x and self.y == other.y:
+            return 2
+        # Left
+        elif self.x == other.x and self.y - 1 == other.y:
+            return 3
