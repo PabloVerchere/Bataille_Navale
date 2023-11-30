@@ -12,7 +12,7 @@ class Boat:
         self.coord = Coordinates.Coordinates() # Left Up Corner
 
 
-    # Return if the boat will not have any tile in common with the list
+    # Return if the boat will not have any tile in common with the listv passed
     def placeable(self, list : list):
         if self.dir: # Vertical
             for i in range(self.size):
@@ -21,7 +21,7 @@ class Boat:
                 
         else: # Horizontal
             for i in range(self.size):
-                if Coordinates.Coordinates(self.coord.x, self.coord.y + i).in_list(list):
+                if Coordinates.Coordinates(self.coord.x, self.coord.y + i).in_list(list): # For all the boat's tile, we verify if the coord is not in the list passed
                     return False
                 
         return True

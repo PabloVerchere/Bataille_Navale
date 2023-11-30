@@ -1,35 +1,25 @@
 from . import Player
 from .fct import *
 
+
 class Game:
     def __init__(self):
-        self.PlayerList = []
-
-        # Add players to the game
-        n = int(input("Combien de joueurs ? (1 ou 2) : "))
-        human = int(input("Combien de joueurs humains ? : "))
-
-        if n == 1: # V1
-            self.PlayerList.append(Player.Player(0)) # Create a bot player to place the boats, but it will play like a human
-
-        else:
-            for i in range(n):
-                if i < human:
-                    clearScreen()
-                    print("Joueur", i + 1)
-                    self.PlayerList.append(Player.Player()) # Create a human player
-                else:
-                    self.PlayerList.append(Player.Player(0)) # Create a bot player
+        self.player = Player.Player() # Create a player
 
 
+    # Player against a random boat grid
     def play(self, debug = False):
-        if len(self.PlayerList) == 1: # V1 of the game, ie: player against a random boat grid
-            nb = 0
-            self.PlayerList[0].introV1()
+            nb = 0 # Number of turns
+            clearScreen()
+            self.player.intro()
 
-            while(not self.PlayerList[0].allSunk()):
-                self.PlayerList[0].showGrid(debug)
-                self.PlayerList[0].playV1()
-                nb += 1
+            while(not self.player.allSunk()): # While all the boats are not sunk, we continue playing
+                self.player.showGrid(debug)
+                self.player.play()
+                nb += 1 # Increment the number of turns
 
-            outroV1(nb)
+                input("Continuer...")
+                clearScreen()
+
+            self.player.showGrid(debug)
+            outro(nb) # Show the outro, when the game is finished
