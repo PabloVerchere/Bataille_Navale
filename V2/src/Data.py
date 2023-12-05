@@ -13,10 +13,7 @@ Boats = {
     "Sous-marin":3,
     "Torpilleur":2
 }
-"""
 
-
-"""
 # Colors
 colorDefault = "\033[39m"
 colorReset = "\033[0m"

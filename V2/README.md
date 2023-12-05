@@ -1,12 +1,4 @@
-# Bataille_Navale
+# Bataille_Navale : Version 2
+Un joueur humain joue contre l'ordinateur, chacun place les bateaux sur sa grille. Ils jouent a tour de rôle.
 
-
-# TO DO
-verif values everywhere
-
-
-SMART
-need to had continuity to boat touch
-because for the moment, choose every time a random touch and shoot the most probable
-
-when a boat is sunk, need to reinit the heatmap, not working well
+> L'ordinateur joue aléatoirement

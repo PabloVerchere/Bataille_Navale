@@ -104,7 +104,7 @@ class Player():
         return inGrid
     
 
-     # Check if the boat is in the grid
+    # Check if the boat is in the grid
     def boat_in_grid(self, boat : Boat):
         inGrid = True
 
@@ -130,12 +130,10 @@ class Player():
     # Check if the boat is sunk
     def checkBoat(self, boat : Boat):
         if boat.state == 0: # If the boat is still not sunk
-            allTouched = True
 
             if boat.dir: # Vertical
                 for i in range(boat.size):
                     if self.grid[boat.coord.x + i][boat.coord.y] == Data.Init: # If one of the boat's tile is not yet touched, the boat is not sunk
-                        allTouched = False
                         break
 
                 # Update the grid if sunk
@@ -148,7 +146,6 @@ class Player():
             else: # Horizontal
                 for i in range(boat.size):
                     if self.grid[boat.coord.x][boat.coord.y + i] == Data.Init: # If one of the boat's tile is not yet touched, the boat is not sunk
-                        allTouched = False
                         break
 
                 # Update the grid if sunk
@@ -157,15 +154,21 @@ class Player():
                     for i in range(boat.size):
                         self.grid[boat.coord.x][boat.coord.y + i] = Data.Sunk
 
+        return boat.state
+
 
     # Check all the boats
     def checkAllBoat(self):
         for boat in self.TabBoat:
-            self.checkBoat(boat)
+            if self.checkBoat(boat):
+                return True
+        return False
 
 
     # Print the result of the shoot
     def printShoot(self, co : Coordinates):
+        print("Coordonnées:", chr(co.x + 65), int(co.y + 1))
+        
         if(self.grid[co.x][co.y] == Data.Miss): # If we miss a boat
             print_color(" - A l'eau - ", Data.colorBlue)
         
