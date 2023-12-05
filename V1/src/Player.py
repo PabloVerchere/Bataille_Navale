@@ -134,27 +134,25 @@ class Player():
             if boat.dir: # Vertical
                 for i in range(boat.size):
                     if self.grid[boat.coord.x + i][boat.coord.y] == Data.Init: # If one of the boat's tile is not yet touched, the boat is not sunk
-                        break
+                        return False
 
                 # Update the grid if sunk
-                if allTouched:
-                    boat.state = 1 # Sunk
-                    for i in range(boat.size):
-                        self.grid[boat.coord.x + i][boat.coord.y] = Data.Sunk
+                boat.state = 1 # Sunk
+                for i in range(boat.size):
+                    self.grid[boat.coord.x + i][boat.coord.y] = Data.Sunk
+                return True
                         
 
             else: # Horizontal
                 for i in range(boat.size):
                     if self.grid[boat.coord.x][boat.coord.y + i] == Data.Init: # If one of the boat's tile is not yet touched, the boat is not sunk
-                        break
+                        return False
 
                 # Update the grid if sunk
-                if allTouched:
-                    boat.state = 1 # Sunk
-                    for i in range(boat.size):
-                        self.grid[boat.coord.x][boat.coord.y + i] = Data.Sunk
-
-        return boat.state
+                boat.state = 1 # Sunk
+                for i in range(boat.size):
+                    self.grid[boat.coord.x][boat.coord.y + i] = Data.Sunk
+                return True
 
 
     # Check all the boats

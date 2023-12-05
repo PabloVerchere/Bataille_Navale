@@ -52,6 +52,7 @@ class Player():
     # Place the boats manually
     def placeBoatHuman(self, TabBoat : list):
         occupedTile = []
+        print("Placez vos bateaux : \n")
 
         for boat in TabBoat:
             self.showGrid(True, occupedTile) # Show the grid with the boats already placed
@@ -178,34 +179,32 @@ class Player():
             self.grid[coord.x][coord.y] = Data.Miss # If there is no boat, we miss it
 
 
-    # Check if a boat is sunk
+    # Check if the boat is sunk
     def checkBoat(self, boat : Boat):
         if boat.state == 0: # If the boat is still not sunk
 
             if boat.dir: # Vertical
                 for i in range(boat.size):
-                    if self.grid[boat.coord.x + i][boat.coord.y] == Data.Init: # If one of the boat's cases is not yet touched, the boat is not sunk
-                        break
+                    if self.grid[boat.coord.x + i][boat.coord.y] == Data.Init: # If one of the boat's tile is not yet touched, the boat is not sunk
+                        return False
 
                 # Update the grid if sunk
-                if allTouched:
-                    boat.state = 1 # Sunk
-                    for i in range(boat.size):
-                        self.grid[boat.coord.x + i][boat.coord.y] = Data.Sunk
+                boat.state = 1 # Sunk
+                for i in range(boat.size):
+                    self.grid[boat.coord.x + i][boat.coord.y] = Data.Sunk
+                return True
                         
 
             else: # Horizontal
                 for i in range(boat.size):
-                    if self.grid[boat.coord.x][boat.coord.y + i] == Data.Init: # If one of the boat's cases is not yet touched, the boat is not sunk
-                        break
+                    if self.grid[boat.coord.x][boat.coord.y + i] == Data.Init: # If one of the boat's tile is not yet touched, the boat is not sunk
+                        return False
 
                 # Update the grid if sunk
-                if allTouched:
-                    boat.state = 1 # Sunk
-                    for i in range(boat.size):
-                        self.grid[boat.coord.x][boat.coord.y + i] = Data.Sunk
-
-        return boat.state
+                boat.state = 1 # Sunk
+                for i in range(boat.size):
+                    self.grid[boat.coord.x][boat.coord.y + i] = Data.Sunk
+                return True
 
 
     # Check all the boats

@@ -42,7 +42,7 @@ class Game:
                 nb[1] += 1 # Increment the number of turns
                 print()
 
-                if not self.PlayerList[1].allSunk(): # If the bot not sunk all the player's fleet, the player can play
+                if not self.playerList[1].allSunk(): # If the bot not sunk all the player's fleet, the player can play
                     # Human
                     print("Joueur")
                     self.playerList[0].showGrid(debug) # Show the grid

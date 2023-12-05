@@ -49,10 +49,12 @@ def printGrid(grid : list):
 # Ask the player to enter a valid coord and return it
 def valid_dir():
     print("Direction (0-H / 1-V) :", end="")
-    direction = int(input())
+    direction = input()
 
-    while direction != 0 and direction != 1: # While the direction is not 0 or 1
+    # While direction is empty, not an int or not 0 or 1, ask again
+    while len(direction) == 0 or not('0' <= direction <= '1'):
         print("Direction (0-H / 1-V) :", end="")
-        direction = int(input())
+        direction = input()
 
-    return direction
+
+    return int(direction)
