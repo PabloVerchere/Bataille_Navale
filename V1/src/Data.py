@@ -3,6 +3,7 @@ Init = "."
 Miss = "*"
 Touch = "+"
 Sunk = "X"
+Debug = "B  "
 
 # Boat
 Boats = {

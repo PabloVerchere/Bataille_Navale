@@ -12,7 +12,7 @@ class Boat:
         self.coord = Coordinates.Coordinates() # Left Up Corner
 
 
-    # Return if the boat will not have any tile in common with the listv passed
+    # Return if the boat will not have any tile in common with the list passed
     def placeable(self, list : list):
         if self.dir: # Vertical
             for i in range(self.size):

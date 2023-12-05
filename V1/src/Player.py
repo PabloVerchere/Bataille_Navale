@@ -196,7 +196,7 @@ class Player():
                 if debug: # Show the grid with the boats
                     if Coordinates.Coordinates(i, j).in_list(self.TabCoord): # If there is a undiscovered boat
                         if self.grid[i][j] == Data.Init: # print the boat in Magenta
-                            print_color("B  ", Data.colorMagenta, False)
+                            print_color(Data.Debug, Data.colorMagenta, False)
                         
                         elif self.grid[i][j] == Data.Touch: # If touched print in green
                             print_color(self.grid[i][j] + "  ", Data.colorGreen, False)
