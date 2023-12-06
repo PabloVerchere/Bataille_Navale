@@ -99,7 +99,7 @@ class Player():
         else: # If there is at least touch in the heatmap
             print("touch") # DEBUG
 
-            co = self.bestTileArroundTouch(heatmap, touch) # Shoot the coord arround a random touch, where the value is the max
+            co = self.bestTileArroundTouch(heatmap, touch) # Shoot the coord arround a touch, where the value is the max
 
             i = 0
             while co == Coordinates.Coordinates(-1, -1) and i < 100: # If there is no tile available arround the touch, we choose another
@@ -439,23 +439,33 @@ Prêt ? C'est parti, bonne chance !
 
     # Find the best tile to arround the touched tile
     def bestTileArroundTouch(self, heatmap : list, lastCo : Coordinates):
+        print("BEST")
         # Heatmap value and coord of the 4 tiles arround the touched tile
         coord4 = {}
 
-        # If the coord is in the grid and not already touch, we add it to the dict
-        if self.co_in_grid(Coordinates.Coordinates(lastCo.x + 1, lastCo.y)) and not self.already_touched(Coordinates.Coordinates(lastCo.x + 1, lastCo.y)):
+        # If the coord is in the grid and not already touch, we add it to the dict, by taking the heatmap value
+        if self.co_in_grid(Coordinates.Coordinates(lastCo.x + 1, lastCo.y)) and not self.already_touched(Coordinates.Coordinates(lastCo.x + 1, lastCo.y)): # Down
             coord4[heatmap[lastCo.x + 1][lastCo.y]] = Coordinates.Coordinates(lastCo.x + 1, lastCo.y)
         
-        if self.co_in_grid(Coordinates.Coordinates(lastCo.x, lastCo.y + 1)) and not self.already_touched(Coordinates.Coordinates(lastCo.x, lastCo.y + 1)):
+        if self.co_in_grid(Coordinates.Coordinates(lastCo.x, lastCo.y + 1)) and not self.already_touched(Coordinates.Coordinates(lastCo.x, lastCo.y + 1)): # Right
             coord4[heatmap[lastCo.x][lastCo.y + 1]] = Coordinates.Coordinates(lastCo.x, lastCo.y + 1)
 
-        if self.co_in_grid(Coordinates.Coordinates(lastCo.x - 1, lastCo.y)) and not self.already_touched(Coordinates.Coordinates(lastCo.x - 1, lastCo.y)):
+        if self.co_in_grid(Coordinates.Coordinates(lastCo.x - 1, lastCo.y)) and not self.already_touched(Coordinates.Coordinates(lastCo.x - 1, lastCo.y)): # Up
             coord4[heatmap[lastCo.x - 1][lastCo.y]] = Coordinates.Coordinates(lastCo.x - 1, lastCo.y)
         
-        if self.co_in_grid(Coordinates.Coordinates(lastCo.x, lastCo.y - 1)) and not self.already_touched(Coordinates.Coordinates(lastCo.x, lastCo.y - 1)):
+        if self.co_in_grid(Coordinates.Coordinates(lastCo.x, lastCo.y - 1)) and not self.already_touched(Coordinates.Coordinates(lastCo.x, lastCo.y - 1)): # Left
             coord4[heatmap[lastCo.x][lastCo.y - 1]] = Coordinates.Coordinates(lastCo.x, lastCo.y - 1)
 
+
         if coord4 == {}: # If there is no coord in the dict, we play randomly
+            print("EMPTY")
             return Coordinates.Coordinates(-1, -1)
+        
+        elif 0 in coord4: # If one of the 4 tiles arround has a 0 heatmap value
+            print("COORD4")
+            coord4[0].print()
+            return coord4[max(coord4)]
+
         else:
+            print("NO 0")
             return coord4[max(coord4)] # Return the coord with the max value in the dict
