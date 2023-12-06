@@ -36,7 +36,7 @@ def outro2(n : int, win :str):
 #######################################################################""")
 
     
-# DEBUG, show the grid
+# DEBUG, show the grid passed
 def printGrid(grid : list):
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -47,7 +47,7 @@ def printGrid(grid : list):
         print()
 
 
-# Ask the player to enter a valid coord and return it
+# Ask the player to enter a valid direction and return it
 def valid_dir():
     print("Direction (0-H / 1-V) :", end="")
     direction = input()
@@ -61,7 +61,7 @@ def valid_dir():
     return int(direction)
 
 
-# Return the coord of the max value in the grid
+# Return the coord of the max value in the grid (in they are multiple max, it return the higher, lefter)
 def maxCoGrid(grid : list):
     max = grid[0][0]
     coord = Coordinates.Coordinates(0, 0)
@@ -76,7 +76,7 @@ def maxCoGrid(grid : list):
 
 
 # Return (-1, -1) if the value is not in the grid, the coord otherwise
-def is_In_Grid(value : int, grid : list):
+def is_in_grid(value : int, grid : list):
     l = []
     for i in range(len(grid)):
         for j in range(len(grid[i])):

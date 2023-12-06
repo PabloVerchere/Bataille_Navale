@@ -57,7 +57,7 @@ class Player():
         for boat in TabBoat:
             self.showGrid(True, occupedTile) # Show the grid with the boats already placed
 
-            print("Placez votre", boat.name, "(", boat.size, "cases)") # Show the boat's name and siz
+            print("Placez votre", boat.name, "(", boat.size, "cases)") # Show the boat's name and size
 
             boat.dir = valid_dir() # Ask the direction
 
@@ -89,22 +89,21 @@ class Player():
 
 
     def playBotSmart(self, heatmap : list):
-        touch = is_In_Grid(Data.Touch, self.grid) # Check if there is at least one touch in the heatmap
+        touch = is_in_grid(Data.Touch, self.grid) # Check if there is at least one touch in the heatmap
         
-
         if touch == Coordinates.Coordinates(-1, -1): # If there is no touch in the heatmap
-            print("no touch")
+            print("no touch") # DEBUG
             # Shoot the coord with the max value in the heatmap
             co = maxCoGrid(heatmap)
 
         else: # If there is at least touch in the heatmap
-            print("touch")
+            print("touch") # DEBUG
 
-            co = self.bestTileArroundTouch(heatmap, touch) # Shoot the coord arround the touch, where the value is the max
+            co = self.bestTileArroundTouch(heatmap, touch) # Shoot the coord arround a random touch, where the value is the max
 
             i = 0
-            while co == Coordinates.Coordinates(-1, -1) and i < 100:
-                touch = is_In_Grid(Data.Touch, self.grid)
+            while co == Coordinates.Coordinates(-1, -1) and i < 100: # If there is no tile available arround the touch, we choose another
+                touch = is_in_grid(Data.Touch, self.grid)
                 co = self.bestTileArroundTouch(heatmap, touch)
                 i += 1
             
@@ -112,10 +111,12 @@ class Player():
                 co = maxCoGrid(heatmap)
 
         # play the coord
-        self.playCo(co, heatmap)
+        heatmap = self.playCo(co, heatmap)
 
         # Update the heatmap for the next turn
         heatmap = self.updateHeatmap(heatmap, co)
+
+        return heatmap
 
 
     # Make the human play
@@ -339,13 +340,14 @@ Prêt ? C'est parti, bonne chance !
         # Print the shoot
         self.printShoot(co)
 
-        if sunk:
+        if sunk: # if we sunk a boat, we reinit the heatmap
             heatmap = self.initHeatmap()
+        
+        return heatmap
 
 
     def initHeatmap(self):
         heatmap = [[0] * 10 for i in range(10)]
-        print("INIT")
         tmp = Boat.Boat("", 0)
 
         # For each boat not sunk, we check all the possible positions and we add 1 to the heatmap
@@ -358,12 +360,12 @@ Prêt ? C'est parti, bonne chance !
                         tmp.coord = Coordinates.Coordinates(i, j) # Test the coord
 
                         tmp.dir = 1 # Vertical
-                        if self.boat_in_grid(tmp): # If the boat is in the grid
+                        if self.boat_in_grid(tmp) and not self.boat_already_touched(tmp): # If the boat is in the grid and not on a played tile
                             for k in range(tmp.size):
                                 heatmap[tmp.coord.x + k][tmp.coord.y] += 1 # Add 1 to the heatmap for each tile of the boat
 
                         tmp.dir = 0 # Horizontal
-                        if self.boat_in_grid(tmp): # If the boat is in the grid
+                        if self.boat_in_grid(tmp) and not self.boat_already_touched(tmp): # If the boat is in the grid and not on a played tile
                             for k in range(tmp.size):
                                 heatmap[tmp.coord.x][tmp.coord.y + k] += 1 # Add 1 to the heatmap for each tile of the boat
 
