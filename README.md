@@ -7,3 +7,7 @@ siens ne le soient.
 
 > Les bateaux ne peuvent être placés que verticalement ou horizontalement.
 > Il est possible de placer deux bateaux côte à côte.
+
+
+## Execution
+ - Pour lancer l'execution d'une version X, ouvrir puis executer le fichier main dans le fichier de la version correspondante  : ```./VX/main.py```
