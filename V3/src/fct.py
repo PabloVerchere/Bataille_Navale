@@ -35,7 +35,7 @@ def outro2(n : int, win :str):
 ################# Bravo,""", win, """ a gagné en""", n, """coups ###########
 #######################################################################""")
 
-    
+
 # DEBUG, show the grid passed
 def printGrid(grid : list):
     for i in range(len(grid)):
@@ -56,7 +56,6 @@ def valid_dir():
     while len(direction) == 0 or not('0' <= direction <= '1'):
         print("Direction (0-H / 1-V) :", end="")
         direction = input()
-
 
     return int(direction)
 
@@ -84,6 +83,6 @@ def is_in_grid(value : int, grid : list):
                 l.append(Coordinates.Coordinates(i, j))
     
     if l != []:
-        return l[randint(0, len(l) - 1)]
+        return l[randint(0, len(l) - 1)] # Return a random coord in the list
     else: 
         return Coordinates.Coordinates(-1, -1)

@@ -55,7 +55,6 @@ class Game:
 
                 # Bot
                 print("Bot")
-                printGrid(heatmap) # Show the heatmap, DEBUG
                 heatmap = self.playerList[1].playBotSmart(heatmap) # Play a smart coord
                 self.playerList[1].showGrid(debug)  # Show the grid
                 nb[1] += 1 # Increment the number of turns

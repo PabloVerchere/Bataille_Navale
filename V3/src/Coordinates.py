@@ -7,7 +7,7 @@ class Coordinates:
     # + operator overload
     def __add__(self, other):
         return Coordinates(self.x + other.x, self.y + other.y)
-    
+
 
     # = operator overload
     def __eq__(self, other):
@@ -20,7 +20,7 @@ class Coordinates:
             if co.x == self.x and co.y == self.y:
                 return True
         return False
-    
+
 
     # overload the copy function
     def copy(self):

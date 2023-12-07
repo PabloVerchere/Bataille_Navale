@@ -5,4 +5,3 @@ Un joueur humain joue contre l'ordinateur, chacun place les bateaux sur sa grill
 > S'il rate, il met a jour sa carte de probabilité et recommence.
 > Sinon, il joue une case jouxtant la case touchée, quand le bateau est coulé, il reprend selon la carte de probabilité
 
-# BUG when sunk a ship that is not the smallest...

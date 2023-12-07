@@ -60,7 +60,6 @@ class Player():
             print("Placez votre", boat.name, "(", boat.size, "cases)") # Show the boat's name and size
 
             boat.dir = valid_dir() # Ask the direction
-
             boat.coord = self.askCoord()
             print()
 
@@ -91,19 +90,15 @@ class Player():
     def playBotSmart(self, heatmap : list):
         touch = is_in_grid(Data.Touch, self.grid) # Check if there is at least one touch in the heatmap
         
-        if touch == Coordinates.Coordinates(-1, -1): # If there is no touch in the heatmap
-            print("no touch") # DEBUG
-            # Shoot the coord with the max value in the heatmap
-            co = maxCoGrid(heatmap)
+        if touch == Coordinates.Coordinates(-1, -1): # If there is no touch in the heatmap, play randomly
+            co = maxCoGrid(heatmap) # Shoot the coord with the max value in the heatmap
 
-        else: # If there is at least touch in the heatmap
-            print("touch") # DEBUG
-
+        else: # If there is at least touch in the heatmap, we play a tile arround a random touch
             co = self.bestTileArroundTouch(heatmap, touch) # Shoot the coord arround a touch, where the value is the max
 
             i = 0
             while co == Coordinates.Coordinates(-1, -1) and i < 100: # If there is no tile available arround the touch, we choose another
-                touch = is_in_grid(Data.Touch, self.grid)
+                touch = is_in_grid(Data.Touch, self.grid) # Take another touch
                 co = self.bestTileArroundTouch(heatmap, touch)
                 i += 1
             
@@ -112,7 +107,6 @@ class Player():
 
         # play the coord
         heatmap = self.playCo(co, heatmap)
-
         # Update the heatmap for the next turn
         heatmap = self.updateHeatmap(heatmap, co)
 
@@ -156,7 +150,7 @@ class Player():
         return co
 
 
-    # Check if the tile is already touched (touch, miss or sunk)
+    # Check if the tile is already touched (different from Init)
     def already_touched(self, coord : Coordinates):
         return self.grid[coord.x][coord.y] != Data.Init
 
@@ -320,6 +314,7 @@ Règles :
 Prêt ? C'est parti, bonne chance !
               """)
 
+
     # Check if all the boats are sunk
     def allSunk(self):
         all = True
@@ -331,7 +326,7 @@ Prêt ? C'est parti, bonne chance !
         
         return all
 
-
+    # Play the coord passed
     def playCo(self, co : Coordinates, heatmap):
         # Update the grids
         self.updateGrid(co)
@@ -346,8 +341,9 @@ Prêt ? C'est parti, bonne chance !
         return heatmap
 
 
+    # Init the heatmap with 0 and add 1 for each boat's tile
     def initHeatmap(self):
-        heatmap = [[0] * 10 for i in range(10)]
+        heatmap = [[0] * 10 for i in range(10)] # Init the heatmap with 0
         tmp = Boat.Boat("", 0)
 
         # For each boat not sunk, we check all the possible positions and we add 1 to the heatmap
@@ -389,9 +385,10 @@ Prêt ? C'est parti, bonne chance !
                 for i in range(-boat.size + 1, 1):
                     tmp.coord = Coordinates.Coordinates(lastCo.x + i, lastCo.y)
 
+                    # If the boat is in the grid and not on a played tile, we decrease the value of the tiles arround the shooted tile
                     if self.boat_in_grid(tmp) and not self.boat_already_touched_except_co(tmp, lastCo):
                         for k in range(tmp.size):
-                            if tmp.coord.x + k != lastCo.x or tmp.coord.y != lastCo.y:
+                            if tmp.coord.x + k != lastCo.x or tmp.coord.y != lastCo.y: # Different from the shooted tile
                                 heatmap[tmp.coord.x + k][tmp.coord.y] -= 1
                     
                 # Horizontal
@@ -399,9 +396,10 @@ Prêt ? C'est parti, bonne chance !
                 for i in range(-boat.size + 1, 1):
                     tmp.coord = Coordinates.Coordinates(lastCo.x, lastCo.y + i)
 
+                    # If the boat is in the grid and not on a played tile, we decrease the value of the tiles arround the shooted tile
                     if self.boat_in_grid(tmp) and not self.boat_already_touched_except_co(tmp, lastCo):
                         for k in range(tmp.size):
-                            if tmp.coord.x != lastCo.x or tmp.coord.y + k != lastCo.y:
+                            if tmp.coord.x != lastCo.x or tmp.coord.y + k != lastCo.y: # Different from the shooted tile
                                 heatmap[tmp.coord.x][tmp.coord.y + k] -= 1
         
         return heatmap
@@ -460,11 +458,6 @@ Prêt ? C'est parti, bonne chance !
         if coord4 == {}: # If there is no coord in the dict, we play randomly
             print("EMPTY")
             return Coordinates.Coordinates(-1, -1)
-        
-        elif 0 in coord4: # If one of the 4 tiles arround has a 0 heatmap value
-            print("COORD4")
-            coord4[0].print()
-            return coord4[max(coord4)]
 
         else:
             print("NO 0")
