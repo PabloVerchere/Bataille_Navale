@@ -17,4 +17,4 @@ Dans chaque version, un mode **debug** est present et permet d'afficher les bate
 
 ### Version Graphique
 Pour la **Version 4**, la bibliothèque ***Turtle*** est requise.
-Pour l'instaler sous windows, exécuter dans un invite de commande ```pip install PythonTurtle```
+Pour l'instaler sous windows, exécuter dans un invite de commande ```bash pip install PythonTurtle
