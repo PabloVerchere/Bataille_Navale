@@ -28,3 +28,12 @@ colorMagenta = "\033[35m"
 
 # Turtle
 tile_size = 50
+
+bg_color = "#001C73"
+grid_color = "#DEE6FF"
+debug_color = "#FF90FF"
+
+touch_color = "#7BF844"
+miss_color = "#37CEFF"
+sunk_color = "#FD0207"
+init_color = "#EBEBEB"

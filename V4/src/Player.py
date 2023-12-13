@@ -35,7 +35,7 @@ class Player():
                 i += 1
 
                 if i > 1000: # If we try too many times, we stop
-                    print_color("ERREUR : Impossible de placer le bateau", Data.colorRed)
+                    print("ERREUR : Impossible de placer le bateau")
                     break
             
             # Add the boat's tile to the list, for the next boat
@@ -56,63 +56,30 @@ class Player():
 
 
     # Make the player play
-    def play(self, x, y, wd, t : turtle, debug = False):
-        if isMouseInGrid(x, y, 10, 10, Data.tile_size):
-            co = getTile(x, y, 10, 10, Data.tile_size)
-            co = Coordinates.Coordinates(co[0], co[1])
+    def play(self, x, y, wd, t, nb : list, debug = False):
+        if isMouseInGrid(x, y, 10, 10, Data.tile_size): # If the click is in the grid
+            co = getTile(x, y, 10, 10, Data.tile_size) # Get the tile of the click
+            co = Coordinates.Coordinates(co[0], co[1]) # Transform the tile into a Coordinates object
 
-            if not self.already_touched(co):
+            if not self.already_touched(co): # If the tile is not already touched, we play
                 self.updateGrid(co)
                 self.checkAllBoat()
-                self.printShoot(co)
             
-            clearScreen(t)
-            self.showGrid(t, debug)
+                clearScreen(t)
+                self.showGrid(t, debug) # Show the updated grid
 
-            if self.allSunk():
+                nb[0] += 1 # Increment the number of turns
+
+
+            if self.allSunk(): # If all the boats are sunk
                 wd.onscreenclick(None) # Disable the click event
-                self.outro(t) # Outro redirection
-
-
-    # Ask the player to enter a coord
-    def askCoord(self):
-        valid = False # Init at False to enter the while loop
-
-        while not valid:
-            # Ask the coord
-            coord = input("Coordonnées (ex: A1) : ")
-            coord = coord.upper() # Upper case
-            coord = coord.strip() # Remove spaces
-
-            # Split the string into alphabetic and numeric parts
-            coord = ["".join(filter(str.isalpha, coord)), "".join(filter(str.isdigit, coord))]
-
-            # Verify if the coord in format "A1"
-            if len(coord[0]) == 1 and (len(coord[1]) == 1 or len(coord[1]) == 2):
-                # Convert the coord from string to Coordinates
-                co = Coordinates.Coordinates(ord(coord[0]) - 65, int(coord[1]) - 1)
-
-                # Verify if the coord is in the grid and if it's not already touched
-                if self.co_in_grid(co) and not self.already_touched(co):
-                    valid = True # If the coord is valid, we can exit the while loop
-
-        return co
+                self.outro(t, nb) # Outro redirection
 
 
     # Check if the tile is already touched
     def already_touched(self, coord : Coordinates):
         return self.grid[coord.x][coord.y] != Data.Init
 
-
-    # Check if the coord is in the grid
-    def co_in_grid(self, coord : Coordinates):
-        inGrid = True
-
-        if (coord.x < 0 or coord.x > 9) or (coord.y < 0 or coord.y > 9):
-            inGrid = False
-
-        return inGrid
-    
 
     # Check if the boat is in the grid
     def boat_in_grid(self, boat : Boat):
@@ -173,91 +140,75 @@ class Player():
         return False
 
 
-    # Print the result of the shoot
-    def printShoot(self, co : Coordinates):
-        print("Coordonnées:", chr(co.x + 65), int(co.y + 1))
-        
-        if(self.grid[co.x][co.y] == Data.Miss): # If we miss a boat
-            print_color(" - A l'eau - ", Data.colorBlue)
-        
-        elif(self.grid[co.x][co.y] == Data.Touch): # If we touch a boat
-            print_color(" - Touché - ", Data.colorGreen)
-
-        elif(self.grid[co.x][co.y] == Data.Sunk): # If we sunk a boat
-            print_color(" - Coulé - ", Data.colorRed)
-
-        print()
-
-
     # Show the grid to the player
-    def showGrid(self, t : turtle, debug = False): 
-        draw_grid(11, 11, Data.tile_size, t) # Draw labels
-        t.penup()
+    def showGrid(self, t, debug = False): 
+        clearScreen(t)
+
+        draw_grid(11, 11, Data.tile_size, t) # Draw labels and grid
         
-        # Grid
+        t.penup()
+        # Grid tiles
         for i in range(10):
             for j in range(10):
                 goto = [j * Data.tile_size - (10 / 2 * Data.tile_size) + Data.tile_size + Data.tile_size / 8, -i * Data.tile_size + (10 / 2 * Data.tile_size) - Data.tile_size - Data.tile_size / 4]
 
                 if debug: # Show the grid with the boats
                     if Coordinates.Coordinates(i, j).in_list(self.TabCoord): # If there is a undiscovered boat
-                        if self.grid[i][j] == Data.Init: # print the boat in Magenta
+                        if self.grid[i][j] == Data.Init: # Print the boat
                             t.goto(goto[0], goto[1])
-                            t.color("magenta")
+                            t.color(Data.debug_color)
                             t.write(Data.Debug, align = "center", font=("Arial", 12, "bold"))
                         
-                        elif self.grid[i][j] == Data.Touch: # If touched print in green
+                        elif self.grid[i][j] == Data.Touch: # If touched
                             t.goto(goto[0], goto[1])
-                            t.color("green")
+                            t.color(Data.touch_color)
                             t.write(Data.Touch, align = "center", font=("Arial", 18, "bold"))
 
-                        elif self.grid[i][j] == Data.Sunk: # If sunk print in red
+                        elif self.grid[i][j] == Data.Sunk: # If sunk
                             t.goto(goto[0], goto[1])
-                            t.color("red")
-                            t.write(Data.Sunk, align = "center", font=("Arial", 12, "bold"))
+                            t.color(Data.sunk_color)
+                            t.write(Data.Sunk, align = "center", font=("Arial", 15, "bold"))
 
-                    elif self.grid[i][j] == Data.Miss: # If missed print in blue
+                    elif self.grid[i][j] == Data.Miss: # If missed
                         t.goto(goto[0], goto[1])
-                        t.color("blue")
+                        t.color(Data.miss_color)
                         t.write(Data.Miss, align = "center", font=("Arial", 22, "bold"))
 
                     else: # If there is nothing
                         t.goto(goto[0], goto[1])
-                        t.color("white")
+                        t.color(Data.init_color)
                         t.write(Data.Init, align = "center", font=("Arial", 20, "bold"))
 
 
                 else: # Show the grid without the boats
-                    # If missed print in blue
-                    if self.grid[i][j] == Data.Miss:
+                    if self.grid[i][j] == Data.Miss: # If missed
                         t.goto(goto[0], goto[1])
-                        t.color("blue")
-                        t.write(Data.Miss, align = "center", font=("Arial", 12, "bold"))
+                        t.color(Data.miss_color)
+                        t.write(Data.Miss, align = "center", font=("Arial", 22, "bold"))
 
-                    # If touched print in green
-                    elif self.grid[i][j] == Data.Touch:
+                    elif self.grid[i][j] == Data.Touch: # If touched
                         t.goto(goto[0], goto[1])
-                        t.color("green")
-                        t.write(Data.Touch, align = "center", font=("Arial", 12, "bold"))
+                        t.color(Data.touch_color)
+                        t.write(Data.Touch, align = "center", font=("Arial", 18, "bold"))
 
-                    # If sunk print in red
-                    elif self.grid[i][j] == Data.Sunk:
+                    elif self.grid[i][j] == Data.Sunk: # If sunk
                         t.goto(goto[0], goto[1])
-                        t.color("red")
-                        t.write(Data.Sunk, align = "center", font=("Arial", 12, "bold"))
+                        t.color(Data.sunk_color)
+                        t.write(Data.Sunk, align = "center", font=("Arial", 15, "bold"))
 
-                    else:
+                    else: # If there is nothing
                         t.goto(goto[0], goto[1])
-                        t.color("white")
-                        t.write(Data.Init, align = "center", font=("Arial", 12, "bold"))
+                        t.color(Data.init_color)
+                        t.write(Data.Init, align = "center", font=("Arial", 20, "bold"))
         
 
     # Show the text intro, boats in the game and rules
-    def intro(self, t : turtle): # Not responsive
+    def intro(self, t):
+        clearScreen(t)
         t.penup()
 
         t.goto(0, 350)
-        t.color("white")
+        t.color(Data.grid_color)
         t.write("Bataille Navale", align="center", font=("Arial", 30, "bold"))
 
         t.goto(0, 300)
@@ -267,7 +218,7 @@ class Player():
         t.write("Il dispose d’:", align="left", font=("Arial", 15, "bold"))
 
         i = 0
-        for boat in self.TabBoat:
+        for boat in self.TabBoat: # Show the boats
             t.goto(-150, 250 - i*40)
             t.write(" - " + str(boat.name) + " (" + str(boat.size) + " cases)", align="left", font=("Arial", 15, "normal"))
             i += 1
@@ -292,13 +243,14 @@ class Player():
         t.write("Appuyer sur Entrer, pour continuer", align="center", font=("Arial", 15, "normal"))
 
 
-    def outro(self, t : turtle):
+    def outro(self, t, nb : list):
         clearScreen(t)
         t.penup()
-        t.color("white")
+
+        t.color(Data.grid_color)
 
         t.goto(0, 0) # Go to the center
-        t.write("Bravo, vous avez gagné !", align="center", font=("Arial", 30, "bold"))
+        t.write("Bravo, vous avez gagné, en " + str(nb[0]) + " coups !", align="center", font=("Arial", 30, "bold")) # Show the number of turns to win
 
 
     # Check if all the boats are sunk

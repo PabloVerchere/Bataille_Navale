@@ -1,8 +1,6 @@
 from . import Boat
 from . import Data
 
-import turtle
-
 
 # Return a tab of boats with the Boats from Data.py
 def initTabBoat():
@@ -13,30 +11,14 @@ def initTabBoat():
 
     return TabBoat
 
-
-# Print a text with a given color
-def print_color(text : str, color : str, end = True):
-    if end:
-        print(color + color + text + Data.colorReset)
-    else:
-        print(str(color) + str(color) + str(text) + Data.colorReset, end = "") # No end line
-
-
 # Clear the screen with turtle
 def clearScreen(t):
      t.clear()
-    
-
-# Message to stop the game and show number of turns
-def outro(n : int):
-        print("""
-#######################################################################
-################# Bravo, vous avez gagné, en""", n, """coups #################
-#######################################################################""")
         
 
 def draw_grid(row, col, size, t):
-    t.color("white")
+    t.color(Data.grid_color)
+
     # Draw the grid
     for i in range(row + 1):
         t.penup()
@@ -67,7 +49,7 @@ def draw_grid(row, col, size, t):
         t.pendown()
         t.write(str(j + 1), align = "center", font=("Arial", 12, "bold"))
     
-    t.right(90)
+    t.right(90) # Reset the direction
 
 
 # Return if the click is in the grid
@@ -77,8 +59,4 @@ def isMouseInGrid(x, y, row, col, size):
 
 # Return the tile of the click in the grid
 def getTile(x, y, row, col, size):
-    return (int)((-y + row * size / 2) // size), (int)((x + col * size / 2) // size)
-
-
-def pos(x, y):
-    print(x, y)
+    return (int)(((-y + row * size / 2) - (Data.tile_size / 2)) // size), (int)(((x + col * size / 2) - (Data.tile_size / 2)) // size)
