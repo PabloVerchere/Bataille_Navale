@@ -437,7 +437,6 @@ Prêt ? C'est parti, bonne chance !
 
     # Find the best tile to arround the touched tile
     def bestTileArroundTouch(self, heatmap : list, lastCo : Coordinates):
-        print("BEST")
         # Heatmap value and coord of the 4 tiles arround the touched tile
         coord4 = {}
 
@@ -456,9 +455,7 @@ Prêt ? C'est parti, bonne chance !
 
 
         if coord4 == {}: # If there is no coord in the dict, we play randomly
-            print("EMPTY")
             return Coordinates.Coordinates(-1, -1)
 
         else:
-            print("NO 0")
             return coord4[max(coord4)] # Return the coord with the max value in the dict
