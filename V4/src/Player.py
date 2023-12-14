@@ -67,6 +67,7 @@ class Player():
             
                 clearScreen(t)
                 self.showGrid(t, debug) # Show the updated grid
+                self.printShoot(co, t) # Print the result of the shoot
 
                 nb[0] += 1 # Increment the number of turns
 
@@ -138,6 +139,29 @@ class Player():
             if self.checkBoat(boat):
                 return True
         return False
+
+
+    # Print the result of the shoot
+    def printShoot(self, co : Coordinates, t):
+        t.penup()
+        t.color(Data.grid_color)
+
+        t.goto(0, 350) # Go to the top
+        t.write("Coordonnées: " + chr(co.x + 65) +  str(int(co.y + 1)), align="center", font=("Arial", 20, "bold")) # Show the coord of the shoot
+        
+        t.goto(0, 300) # Go to the center
+        if(self.grid[co.x][co.y] == Data.Miss): # If we miss a boat
+            t.color(Data.miss_color)
+            t.write(" - A l'eau - ", align="center", font=("Arial", 20, "bold"))
+        
+        elif(self.grid[co.x][co.y] == Data.Touch): # If we touch a boat
+            t.color(Data.touch_color)
+            t.write(" - Touché - ", align="center", font=("Arial", 20, "bold"))
+
+        elif(self.grid[co.x][co.y] == Data.Sunk): # If we sunk a boat
+            t.color(Data.sunk_color)
+            t.write(" - Coulé - ", align="center", font=("Arial", 20, "bold"))
+
 
 
     # Show the grid to the player
